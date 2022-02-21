@@ -58,7 +58,7 @@ Throughout the lessons we'll use VSCode for the excerises. Make sure you have th
 
 Open the settings of VSCode, search for **Format on save** and make sure it's checked. This assures that every time you save a file, it's being formatted according to the code style rules described in **.prettier.rc**.
 
-## **Starting the Backend**
+## **Starting the demo application**
 
 Run the following commands in a terminal (project root folder) to install all required node packages en get the server up and running:
 
