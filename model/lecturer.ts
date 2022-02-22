@@ -1,41 +1,52 @@
-import { Lecturer, Course } from '../types';
-import { database } from '../database';
-import { OkPacket, RowDataPacket } from 'mysql2';
+import { Lecturer } from '../types';
+import { query } from '../database';
+import { RowDataPacket } from 'mysql2';
+
+const mapRowsToLecturers = (rows: RowDataPacket[]): Array<Lecturer> => {
+    const result = [];
+
+    rows.forEach(
+        ({
+            lecturer_id,
+            lecturer_name,
+            course_id,
+            course_name,
+            course_description,
+            course_phase,
+        }) => {
+            const course = {
+                id: course_id,
+                name: course_name,
+                description: course_description,
+                phase: course_phase,
+            };
+
+            const existing = result.find((el) => el.id === lecturer_id);
+            if (!existing) {
+                result.push({
+                    id: lecturer_id,
+                    name: lecturer_name,
+                    courses: [course],
+                });
+            } else {
+                existing.courses.push(course);
+            }
+        }
+    );
+
+    return result;
+};
 
 const getLecturers = (callback: Function) => {
-    const query = `SELECT l.name AS lecturer_name, c.name AS course_name, c.description AS course_description, c.phase AS course_phase
+    const queryString = `SELECT l.id AS lecturer_id, l.name AS lecturer_name, c.id AS course_id, c.name AS course_name, c.description AS course_description, c.phase AS course_phase
   FROM lecturer AS l, course AS c, lecturer_course AS lc
   WHERE l.id = lc.lecturer_id
   AND c.id = lc.course_id`;
 
-    database.query(query, (err, result) => {
-        if (err) {
-            callback(err);
-        }
-        const rows = <RowDataPacket[]>result;
-
-        const lecturers = rows.reduce((mem, cur) => {
-            const course = {
-                name: cur.course_name,
-                description: cur.course_description,
-                phase: cur.course_phase,
-            };
-            const lecturer = mem.find((el) => el.name === cur.lecturer_name);
-
-            if (!lecturer) {
-                mem.push({
-                    name: cur.lecturer_name,
-                    courses: [course],
-                });
-            } else {
-                lecturer.courses.push(course);
-            }
-
-            return mem;
-        }, []);
-
-        callback(null, lecturers);
-    });
+    (async () => {
+        const rows = await query(queryString);
+        callback(null, mapRowsToLecturers(rows));
+    })().catch((err) => callback(err));
 };
 
 export { getLecturers };

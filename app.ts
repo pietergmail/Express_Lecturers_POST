@@ -31,9 +31,7 @@ app.get('/status', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    return res.status(200).send({
-        success: 'true',
-    });
+    return res.status(200).send();
 });
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
