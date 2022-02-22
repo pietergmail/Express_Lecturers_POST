@@ -1,4 +1,4 @@
-import { Lecturer, Course } from '../types/lecturer';
+import { Lecturer, Course } from '../types';
 import { database } from '../database';
 import { OkPacket, RowDataPacket } from 'mysql2';
 
