@@ -10,7 +10,7 @@ const getLecturers = async (onResult: Function) => {
   AND c.id = lc.course_id`;
 
     /**
-     * You can avoid the try/catch block by wrapping the logic into an IIFE (immediately invoked function expression):
+     * You can avoid a try/catch block by wrapping the logic into an IIFE (immediately invoked function expression):
      *  (async () => {
      *      const rows = await connectionPool.query(query);
      *      onResult(null, mapToLecturers(rows));
@@ -54,4 +54,26 @@ const addLecturer = async (lecturer: Lecturer, onResult: Function) => {
     }
 };
 
-export { getLecturers, addLecturer };
+const deleteLecturer = async (lecturerId: number, onResult: Function) => {
+    const lecturerDelete = 'DELETE FROM lecturer WHERE ID = ?';
+    const lecturerCourseDelete = 'DELETE FROM lecturer_course WHERE lecturer_id = ?';
+
+    const connection = await connectionPool.getConnection();
+
+    await connection.beginTransaction();
+
+    try {
+        await connection.execute(lecturerCourseDelete, [lecturerId]);
+        await connection.execute(lecturerDelete, [lecturerId]);
+
+        await connection.commit();
+        onResult(null);
+    } catch (error) {
+        await connection.rollback();
+        onResult(error);
+    } finally {
+        connection.release();
+    }
+};
+
+export { getLecturers, addLecturer, deleteLecturer };

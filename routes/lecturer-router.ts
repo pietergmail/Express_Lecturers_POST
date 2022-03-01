@@ -100,4 +100,32 @@ lecturerRouter.post('/add', (req: Request, res: Response) => {
     });
 });
 
+/**
+ * @swagger
+ * /lecturers/delete/{id}:
+ *   delete:
+ *      summary: Delete a lecturer by ID
+ *      responses:
+ *         "200":
+ *            description: Delete succesful
+ *      parameters:
+ *        - name: id
+ *          in: path
+ *          description: Lecturer ID
+ *          required: true
+ *          schema:
+ *            type: integer
+ *            format: int64
+ */
+lecturerRouter.delete('/delete/:id', (req: Request, res: Response) => {
+    const lecturerId = parseInt(req.params.id);
+    lecturerModel.deleteLecturer(lecturerId, (error: Error) => {
+        if (error) {
+            return res.status(500).json({ status: 'error', errorMessage: error.message });
+        }
+
+        res.status(200).json({ status: 'success' });
+    });
+});
+
 export { lecturerRouter };

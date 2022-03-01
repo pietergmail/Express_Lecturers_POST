@@ -9,7 +9,7 @@ import { lecturerRouter } from './routes/lecturer-router';
 const app = express();
 dotenv.config();
 
-const options = {
+const swaggerOpts = {
     definition: {
         openapi: '3.0.0',
         info: {
@@ -19,8 +19,7 @@ const options = {
     },
     apis: ['./routes/*.ts'],
 };
-
-const swaggerSpec = swaggerJSDoc(options);
+const swaggerSpec = swaggerJSDoc(swaggerOpts);
 
 app.use(cors());
 app.use(bodyParser.json());
