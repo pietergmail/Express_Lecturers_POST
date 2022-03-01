@@ -60,12 +60,44 @@ const lecturerRouter = express.Router();
  *               $ref: '#/components/schemas/Lecturer'
  */
 lecturerRouter.get('/', (req: Request, res: Response) => {
-    lecturerModel.getLecturers((err: Error, lecturers: Array<Lecturer>) => {
+    lecturerModel.getLecturers((err: Error, lecturers: Lecturer[]) => {
         if (err) {
             return res.status(500).json({ status: 'error', errorMessage: err.message });
         }
 
         res.status(200).json(lecturers);
+    });
+});
+
+/**
+ * @swagger
+ * /lecturers/get/{id}:
+ *   get:
+ *      summary: Get a lecturer by ID
+ *      responses:
+ *         200:
+ *           description: A lecturer
+ *           content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Lecturer'
+ *      parameters:
+ *        - name: id
+ *          in: path
+ *          description: Lecturer ID
+ *          required: true
+ *          schema:
+ *            type: integer
+ *            format: int64
+ */
+lecturerRouter.get('/get/:id', (req: Request, res: Response) => {
+    const lecturerId = parseInt(req.params.id);
+    lecturerModel.getLecturer(lecturerId, (error: Error, lecturer: Lecturer) => {
+        if (error) {
+            return res.status(500).json({ status: 'error', errorMessage: error.message });
+        }
+
+        res.status(200).json(lecturer);
     });
 });
 
@@ -81,7 +113,7 @@ lecturerRouter.get('/', (req: Request, res: Response) => {
  *            schema:
  *              $ref: '#/components/schemas/LecturerInput'
  *      responses:
- *         "200":
+ *         200:
  *            description: The ID of the new Lecturer
  *            content:
  *              application/json:
@@ -106,7 +138,7 @@ lecturerRouter.post('/add', (req: Request, res: Response) => {
  *   delete:
  *      summary: Delete a lecturer by ID
  *      responses:
- *         "200":
+ *         200:
  *            description: Delete succesful
  *      parameters:
  *        - name: id

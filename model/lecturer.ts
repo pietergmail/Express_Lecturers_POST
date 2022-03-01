@@ -24,6 +24,22 @@ const getLecturers = async (onResult: Function) => {
     }
 };
 
+const getLecturer = async (lecturerId: number, onResult: Function) => {
+    const query = `SELECT l.id AS lecturer_id, l.name AS lecturer_name, c.id AS course_id, c.name AS course_name, c.description AS course_description, c.phase AS course_phase
+  FROM lecturer AS l, course AS c, lecturer_course AS lc
+  WHERE l.id = ?
+  AND l.id = lc.lecturer_id
+  AND c.id = lc.course_id`;
+
+    try {
+        const [row] = await connectionPool.execute(query, [lecturerId]);
+        console.log(row);
+        onResult(null, mapToLecturers(<RowDataPacket[]>row)[0]);
+    } catch (error) {
+        onResult(error);
+    }
+};
+
 const addLecturer = async (lecturer: Lecturer, onResult: Function) => {
     const lecturerInsert = 'INSERT INTO lecturer (name) VALUES (?)';
     const lecturerCourseInsert =
@@ -76,4 +92,4 @@ const deleteLecturer = async (lecturerId: number, onResult: Function) => {
     }
 };
 
-export { getLecturers, addLecturer, deleteLecturer };
+export { getLecturers, getLecturer, addLecturer, deleteLecturer };
