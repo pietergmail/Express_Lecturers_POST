@@ -1,41 +1,7 @@
+import { OkPacket } from 'mysql2';
+import mapToLecturers from './lecturer-mapper';
 import { Lecturer } from '../types';
 import { query } from '../database';
-import { OkPacket, RowDataPacket } from 'mysql2';
-
-const mapRowsToLecturers = (rows: RowDataPacket[]): Array<Lecturer> => {
-    const result = [];
-
-    rows.forEach(
-        ({
-            lecturer_id,
-            lecturer_name,
-            course_id,
-            course_name,
-            course_description,
-            course_phase,
-        }) => {
-            const course = {
-                id: course_id,
-                name: course_name,
-                description: course_description,
-                phase: course_phase,
-            };
-
-            const existing = result.find((el) => el.id === lecturer_id);
-            if (!existing) {
-                result.push({
-                    id: lecturer_id,
-                    name: lecturer_name,
-                    courses: [course],
-                });
-            } else {
-                existing.courses.push(course);
-            }
-        }
-    );
-
-    return result;
-};
 
 const getLecturers = (callback: Function) => {
     const queryStatement = `SELECT l.id AS lecturer_id, l.name AS lecturer_name, c.id AS course_id, c.name AS course_name, c.description AS course_description, c.phase AS course_phase
@@ -45,7 +11,7 @@ const getLecturers = (callback: Function) => {
 
     (async () => {
         const rows = await query(queryStatement);
-        callback(null, mapRowsToLecturers(rows));
+        callback(null, mapToLecturers(rows));
     })().catch((err) => callback(err));
 };
 
