@@ -26,6 +26,19 @@
  *                  phase:
  *                    type: number
  *                    description: The phase within the education path
+ *      LecturerInput:
+ *          type: object
+ *          properties:
+ *            name:
+ *              type: string
+ *              description: Lecturer's name.
+ *            courses:
+ *              type: array
+ *              items:
+ *                type: object
+ *                properties:
+ *                  id:
+ *                    type: number
  */
 import express, { Request, Response, Handler } from 'express';
 import * as lecturerModel from '../model/lecturer';
@@ -66,7 +79,7 @@ lecturerRouter.get('/', (req: Request, res: Response) => {
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Lecturer'
+ *              $ref: '#/components/schemas/LecturerInput'
  *      responses:
  *         "200":
  *            description: The ID of the new Lecturer
