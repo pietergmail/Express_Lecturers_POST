@@ -1,7 +1,7 @@
 import { RowDataPacket } from 'mysql2';
 import { Lecturer } from '../types';
 
-const mapToLecturers = (rows: RowDataPacket[]): Array<Lecturer> => {
+const mapToLecturers = (rows: RowDataPacket[]): Lecturer[] => {
     const result = [];
 
     rows.forEach(

@@ -91,9 +91,9 @@ lecturerRouter.get('/', (req: Request, res: Response) => {
  */
 lecturerRouter.post('/add', (req: Request, res: Response) => {
     const lecturer = <Lecturer>req.body;
-    lecturerModel.addLecturer(lecturer, (err: Error, lecturerId: number) => {
-        if (err) {
-            return res.status(500).json({ status: 'error', errorMessage: err.message });
+    lecturerModel.addLecturer(lecturer, (error: Error, lecturerId: number) => {
+        if (error) {
+            return res.status(500).json({ status: 'error', errorMessage: error.message });
         }
 
         res.status(200).json({ status: 'success', lecturerId });

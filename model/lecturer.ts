@@ -1,35 +1,57 @@
-import { OkPacket } from 'mysql2';
+import { OkPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
 import mapToLecturers from './lecturer-mapper';
 import { Lecturer } from '../types';
-import { query } from '../database';
+import { connectionPool } from '../database';
 
-const getLecturers = (onResult: Function) => {
-    const queryStatement = `SELECT l.id AS lecturer_id, l.name AS lecturer_name, c.id AS course_id, c.name AS course_name, c.description AS course_description, c.phase AS course_phase
+const getLecturers = async (onResult: Function) => {
+    const query = `SELECT l.id AS lecturer_id, l.name AS lecturer_name, c.id AS course_id, c.name AS course_name, c.description AS course_description, c.phase AS course_phase
   FROM lecturer AS l, course AS c, lecturer_course AS lc
   WHERE l.id = lc.lecturer_id
   AND c.id = lc.course_id`;
 
-    (async () => {
-        const rows = await query(queryStatement);
-        onResult(null, mapToLecturers(rows));
-    })().catch((err) => onResult(err));
+    /**
+     * You can avoid the try/catch block by wrapping the logic into an IIFE (immediately invoked function expression):
+     *  (async () => {
+     *      const rows = await connectionPool.query(query);
+     *      onResult(null, mapToLecturers(rows));
+     *  })().catch((err) => onResult(err));
+     */
+    try {
+        const [rows] = await connectionPool.query(query);
+        onResult(null, mapToLecturers(<RowDataPacket[]>rows));
+    } catch (error) {
+        onResult(error);
+    }
 };
 
-const addLecturer = (lecturer: Lecturer, onResult: Function) => {
+const addLecturer = async (lecturer: Lecturer, onResult: Function) => {
     const lecturerInsert = 'INSERT INTO lecturer (name) VALUES (?)';
     const lecturerCourseInsert =
         'INSERT INTO lecturer_course (lecturer_id, course_id) VALUES (?, ?)';
 
-    (async () => {
-        const result = await query(lecturerInsert, [lecturer.name]);
-        const addedLecturerId = (<OkPacket>result).insertId;
+    const connection = await connectionPool.getConnection();
 
-        lecturer.courses.forEach(
-            async (course) => await query(lecturerCourseInsert, [addedLecturerId, course.id])
-        );
+    // Multiple queries are involved, so we execute them in a transaction to assure they will only get commited
+    // when all queries were succesful. Otherwise, all queries need to be rolled back.
+    await connection.beginTransaction();
 
+    try {
+        const [result] = await connection.execute(lecturerInsert, [lecturer.name]);
+        const addedLecturerId = (<ResultSetHeader>result).insertId;
+
+        // we can't use forEach, since it expects a synchronous function and doesn't wait for promises
+        for (const course of lecturer.courses) {
+            await connection.execute(lecturerCourseInsert, [addedLecturerId, course.id]);
+        }
+
+        await connection.commit();
         onResult(null, addedLecturerId);
-    })().catch((err) => onResult(err));
+    } catch (error) {
+        await connection.rollback();
+        onResult(error);
+    } finally {
+        connection.release();
+    }
 };
 
 export { getLecturers, addLecturer };
