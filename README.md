@@ -71,6 +71,8 @@ Run the following commands in a terminal (project root folder) to install all re
 This will start an express server on [http://localhost:3000](http://localhost:3000).
 You can test if everything works by requesting http://localhost:3000/status or http://localhost:3000/status/lecturers from a browser or a tool like Postman.
 
+You can access the API documentation and test it via Swagger running on http://localhost:3000/api-docs.
+
 ## **Troubleshooting**
 
 ### **Network problems in WSL**
@@ -94,6 +96,12 @@ Create a new file **/etc/resolv.conf** and add the line:
 
 ```
 nameserver 8.8.8.8
+```
+
+Lock the resolv.conf so it doesn't get overwritten by executing:
+
+```
+> sudo chattr +i resolv.conf
 ```
 
 Restart WSL.
