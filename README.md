@@ -58,6 +58,21 @@ Throughout the lessons we'll use VSCode for the excerises. Make sure you have th
 
 Open the settings of VSCode, search for **Format on save** and make sure it's checked. This assures that every time you save a file, it's being formatted according to the code style rules described in **.prettier.rc**.
 
+`Dotenv`
+
+Dotenv is a module to externalize configuration, for instance database connection details.
+To get this demo up and running, you'll need to create a **.env** file in you root directory. The contents should look like this :
+
+```
+APP_PORT=3000
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=root
+DB_SCHEME=lecturers
+```
+
+Replace the values with your local configuration.
+
 ## **Starting the demo application**
 
 Run the following commands in a terminal (project root folder) to install all required node packages en get the server up and running:
