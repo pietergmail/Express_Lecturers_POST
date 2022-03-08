@@ -33,7 +33,6 @@ const getLecturer = async (lecturerId: number, onResult: Function) => {
 
     try {
         const [row] = await connectionPool.execute(query, [lecturerId]);
-        console.log(row);
         onResult(null, mapToLecturers(<RowDataPacket[]>row)[0]);
     } catch (error) {
         onResult(error);
