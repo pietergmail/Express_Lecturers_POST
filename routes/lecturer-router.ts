@@ -126,9 +126,9 @@ lecturerRouter.post('/add', (req: Request, res: Response) => {
     lecturerModel.addLecturer(lecturer, (error: Error, lecturerId: number) => {
         if (error) {
             return res.status(500).json({ status: 'error', errorMessage: error.message });
+        } else {
+            res.status(200).json({ status: 'success', lecturerId });
         }
-
-        res.status(200).json({ status: 'success', lecturerId });
     });
 });
 
@@ -154,9 +154,9 @@ lecturerRouter.delete('/delete/:id', (req: Request, res: Response) => {
     lecturerModel.deleteLecturer(lecturerId, (error: Error) => {
         if (error) {
             return res.status(500).json({ status: 'error', errorMessage: error.message });
+        } else {
+            res.status(200).json({ status: 'success' });
         }
-
-        res.status(200).json({ status: 'success' });
     });
 });
 
