@@ -71,7 +71,7 @@ const addLecturer = async (
         await connection.rollback();
         onResult(error, null);
     } finally {
-        connection.release();
+        await connection.release();
     }
 };
 
@@ -93,7 +93,7 @@ const deleteLecturer = async (lecturerId: number, onResult: (error: Error) => vo
         await connection.rollback();
         onResult(error);
     } finally {
-        connection.release();
+        await connection.release();
     }
 };
 
