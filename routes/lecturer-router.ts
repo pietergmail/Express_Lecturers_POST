@@ -103,7 +103,7 @@ lecturerRouter.get('/:id', (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /lecturers/add:
+ * /lecturers:
  *   post:
  *      summary: Add a lecturer
  *      requestBody:
@@ -121,7 +121,7 @@ lecturerRouter.get('/:id', (req: Request, res: Response) => {
  *                  type: number
  *                  description: Database ID
  */
-lecturerRouter.post('/add', (req: Request, res: Response) => {
+lecturerRouter.post('/', (req: Request, res: Response) => {
     const lecturer = <Lecturer>req.body;
     lecturerModel.addLecturer(lecturer, (error: Error, lecturerId: number) => {
         if (error) {
@@ -134,7 +134,7 @@ lecturerRouter.post('/add', (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /lecturers/delete/{id}:
+ * /lecturers/{id}:
  *   delete:
  *      summary: Delete a lecturer by ID
  *      responses:
@@ -149,7 +149,7 @@ lecturerRouter.post('/add', (req: Request, res: Response) => {
  *            type: integer
  *            format: int64
  */
-lecturerRouter.delete('/delete/:id', (req: Request, res: Response) => {
+lecturerRouter.delete('/:id', (req: Request, res: Response) => {
     const lecturerId = parseInt(req.params.id);
     lecturerModel.deleteLecturer(lecturerId, (error: Error) => {
         if (error) {
