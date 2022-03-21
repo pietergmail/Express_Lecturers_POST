@@ -71,7 +71,7 @@ lecturerRouter.get('/', (req: Request, res: Response) => {
 
 /**
  * @swagger
- * /lecturers/get/{id}:
+ * /lecturers/{id}:
  *   get:
  *      summary: Get a lecturer by ID
  *      responses:
@@ -90,7 +90,7 @@ lecturerRouter.get('/', (req: Request, res: Response) => {
  *            type: integer
  *            format: int64
  */
-lecturerRouter.get('/get/:id', (req: Request, res: Response) => {
+lecturerRouter.get('/:id', (req: Request, res: Response) => {
     const lecturerId = parseInt(req.params.id);
     lecturerModel.getLecturer(lecturerId, (error: Error, lecturer: Lecturer) => {
         if (error) {
