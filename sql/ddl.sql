@@ -9,12 +9,6 @@ create table course
         unique (id)
 );
 
-INSERT INTO lecturers.course (name, id, description, phase) VALUES ('Web development 4', 1, 'Web development with Express and React', 2);
-INSERT INTO lecturers.course (name, id, description, phase) VALUES ('Web development 1', 2, 'Valid HTML & CSS', 1);
-INSERT INTO lecturers.course (name, id, description, phase) VALUES ('Algoritmisch denken', 3, 'Learn to write algorithms', 1);
-INSERT INTO lecturers.course (name, id, description, phase) VALUES ('Web development 2', 5, 'Servlets & JSP', 1);
-INSERT INTO lecturers.course (name, id, description, phase) VALUES ('Web development 3', 6, 'Client-server, JS, security, deployment', 2);
-
 create table lecturer
 (
     id   int auto_increment
@@ -23,11 +17,6 @@ create table lecturer
     constraint lecturer_id_uindex
         unique (id)
 );
-
-INSERT INTO lecturers.lecturer (id, name) VALUES (1, 'Elke Steegmans');
-INSERT INTO lecturers.lecturer (id, name) VALUES (2, 'Johan Pieck');
-INSERT INTO lecturers.lecturer (id, name) VALUES (3, 'Greetje Jongen');
-INSERT INTO lecturers.lecturer (id, name) VALUES (4, 'Jan Van Hee');
 
 create table lecturer_course
 (
@@ -40,6 +29,20 @@ create table lecturer_course
     constraint fk_lecturer_id
         foreign key (lecturer_id) references lecturer (id)
 );
+
+
+
+INSERT INTO lecturers.course (name, id, description, phase) VALUES ('Web development 4', 1, 'Web development with Express and React', 2);
+INSERT INTO lecturers.course (name, id, description, phase) VALUES ('Web development 1', 2, 'Valid HTML & CSS', 1);
+INSERT INTO lecturers.course (name, id, description, phase) VALUES ('Algoritmisch denken', 3, 'Learn to write algorithms', 1);
+INSERT INTO lecturers.course (name, id, description, phase) VALUES ('Web development 2', 5, 'Servlets & JSP', 1);
+INSERT INTO lecturers.course (name, id, description, phase) VALUES ('Web development 3', 6, 'Client-server, JS, security, deployment', 2);
+
+
+INSERT INTO lecturers.lecturer (id, name) VALUES (1, 'Elke Steegmans');
+INSERT INTO lecturers.lecturer (id, name) VALUES (2, 'Johan Pieck');
+INSERT INTO lecturers.lecturer (id, name) VALUES (3, 'Greetje Jongen');
+INSERT INTO lecturers.lecturer (id, name) VALUES (4, 'Jan Van Hee');
 
 INSERT INTO lecturers.lecturer_course (id, lecturer_id, course_id) VALUES (1, 1, 1);
 INSERT INTO lecturers.lecturer_course (id, lecturer_id, course_id) VALUES (2, 1, 6);
