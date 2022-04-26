@@ -1,4 +1,4 @@
-import { OkPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
+import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import mapToLecturers from './lecturer-mapper';
 import { Lecturer } from '../types';
 import { connectionPool } from '../database';
