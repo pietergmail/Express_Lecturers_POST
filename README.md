@@ -45,7 +45,7 @@ Replace the connection details with the ones from your server.
 
 `VSCode`
 
-Throughout the lessons we'll use VSCode for the excerises. Make sure you have the following extensions downloaded and enabled:
+Throughout the lessons we'll use VSCode for the exercises. Make sure you have the following extensions downloaded and enabled:
 
 -   Prettier - Code formatter
 -   Auto Rename Tag
