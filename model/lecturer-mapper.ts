@@ -25,7 +25,7 @@ const mapToLecturers = (rows: RowDataPacket[]): Lecturer[] => {
                 result.push({
                     id: lecturer_id,
                     name: lecturer_name,
-                    courses: [course],
+                    courses: course_id ? [course] : [],
                 });
             } else {
                 existing.courses.push(course);

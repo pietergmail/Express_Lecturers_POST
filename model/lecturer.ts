@@ -4,10 +4,10 @@ import { Lecturer } from '../types';
 import { connectionPool } from '../database';
 
 const getLecturers = async (onResult: (error: Error, lecturers: Lecturer[]) => void) => {
-    const query = `SELECT l.id AS lecturer_id, l.name AS lecturer_name, c.id AS course_id, c.name AS course_name, c.description AS course_description, c.phase AS course_phase
-  FROM lecturer AS l, course AS c, lecturer_course AS lc
-  WHERE l.id = lc.lecturer_id
-  AND c.id = lc.course_id`;
+    const query = `SELECT l.id AS lecturer_id, l.name AS lecturer_name, c.id AS course_id,  c.name AS course_name, c.description as course_description, c.phase as course_phase
+    FROM lecturer AS l
+  left join lecturer_course lc on l.id = lc.lecturer_id
+  left join course c on lc.course_id = c.id`;
 
     /**
      * You can avoid a try/catch block by wrapping the logic into an IIFE (immediately invoked function expression):
