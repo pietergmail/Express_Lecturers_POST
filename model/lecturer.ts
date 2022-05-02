@@ -50,13 +50,13 @@ const addLecturer = async (
     const lecturerCourseInsert =
         'INSERT INTO lecturer_course (lecturer_id, course_id) VALUES (?, ?)';
 
-    const connection = await connectionPool.getConnection();
-
-    // Multiple queries are involved, so we execute them in a transaction to assure they will only get commited
-    // when all queries were succesful. Otherwise, all queries need to be rolled back.
-    await connection.beginTransaction();
-
+    let connection;
     try {
+        connection = await connectionPool.getConnection();
+        // Multiple queries are involved, so we execute them in a transaction to assure they will only get commited
+        // when all queries were succesful. Otherwise, all queries need to be rolled back.
+        await connection.beginTransaction();
+
         const [result] = await connection.execute(lecturerInsert, [lecturer.name]);
         const addedLecturerId = (<ResultSetHeader>result).insertId;
 
@@ -68,10 +68,14 @@ const addLecturer = async (
         await connection.commit();
         onResult(null, addedLecturerId);
     } catch (error) {
-        await connection.rollback();
+        if (connection) {
+            await connection.rollback();
+        }
         onResult(error, null);
     } finally {
-        await connection.release();
+        if (connection) {
+            await connection.release();
+        }
     }
 };
 
@@ -79,21 +83,25 @@ const deleteLecturer = async (lecturerId: number, onResult: (error: Error) => vo
     const lecturerDelete = 'DELETE FROM lecturer WHERE ID = ?';
     const lecturerCourseDelete = 'DELETE FROM lecturer_course WHERE lecturer_id = ?';
 
-    const connection = await connectionPool.getConnection();
-
-    await connection.beginTransaction();
+    let connection;
 
     try {
+        connection = await connectionPool.getConnection();
+        await connection.beginTransaction();
         await connection.execute(lecturerCourseDelete, [lecturerId]);
         await connection.execute(lecturerDelete, [lecturerId]);
 
         await connection.commit();
         onResult(null);
     } catch (error) {
-        await connection.rollback();
+        if (connection) {
+            await connection.rollback();
+        }
         onResult(error);
     } finally {
-        await connection.release();
+        if (connection) {
+            await connection.release();
+        }
     }
 };
 
